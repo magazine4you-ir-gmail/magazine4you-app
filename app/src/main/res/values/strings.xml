@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">مجله بیت کوین</string>
+    <string name="site_url">https://magazine4you.ir/</string>
+    <string name="error_title">اتصال برقرار نشد</string>
+    <string name="error_message">به نظر می‌رسه اینترنت وصل نیست یا سایت در دسترس نیست.\nلطفاً اتصال خود را بررسی کنید.</string>
+    <string name="retry_button">تلاش مجدد</string>
+</resources>

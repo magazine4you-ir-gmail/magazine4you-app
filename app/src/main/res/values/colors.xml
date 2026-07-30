@@ -1,0 +1,9 @@
+<resources>
+    <color name="bitcoin_orange">#F7931A</color>
+    <color name="bitcoin_orange_dark">#C9741A</color>
+    <color name="black">#1A1A1A</color>
+    <color name="white">#FFFFFF</color>
+    <color name="background_light">#FFFFFF</color>
+    <color name="background_dark">#121212</color>
+    <color name="text_secondary">#666666</color>
+</resources>
