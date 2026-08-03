@@ -6,4 +6,6 @@
     <color name="background_light">#FFFFFF</color>
     <color name="background_dark">#121212</color>
     <color name="text_secondary">#666666</color>
+    <color name="loading_background">#000000</color>
+    <color name="loading_yellow">#FFD500</color>
 </resources>
