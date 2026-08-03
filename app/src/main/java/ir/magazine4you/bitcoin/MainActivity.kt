@@ -113,7 +113,13 @@ class MainActivity : AppCompatActivity() {
     private fun setupSwipeRefresh() {
         swipeRefresh.setColorSchemeResources(R.color.bitcoin_orange)
         swipeRefresh.setOnRefreshListener {
-            loadSite()
+            if (hasError) {
+                // No page is currently loaded (previous attempt failed), so start fresh from home.
+                loadSite()
+            } else {
+                // Refresh the page the user is currently on, not the home page.
+                webView.reload()
+            }
         }
     }
 
