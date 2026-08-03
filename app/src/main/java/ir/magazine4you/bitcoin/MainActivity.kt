@@ -28,6 +28,12 @@ class MainActivity : AppCompatActivity() {
 
     private val siteUrl by lazy { getString(R.string.site_url) }
     private var hasError = false
+    private var loadingDismissedEarly = false
+
+    // Hide the full-screen loading overlay once the page is "mostly" ready,
+    // instead of waiting for the very last few percent (fonts/analytics/etc.)
+    // which can take a while and makes the loading feel too long.
+    private val earlyDismissProgressThreshold = 75
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,10 +81,10 @@ class MainActivity : AppCompatActivity() {
             override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
                 hasError = false
+                loadingDismissedEarly = false
                 progressBar.visibility = View.VISIBLE
-                if (!swipeRefresh.isRefreshing) {
-                    loadingOverlay.visibility = View.VISIBLE
-                }
+                // Always show the full loading screen, including on pull-to-refresh.
+                loadingOverlay.visibility = View.VISIBLE
             }
 
             override fun onPageFinished(view: WebView, url: String?) {
@@ -88,6 +94,11 @@ class MainActivity : AppCompatActivity() {
                 loadingOverlay.visibility = View.GONE
                 if (!hasError) {
                     showContent()
+                }
+                // Workaround for a known Android WebView repaint bug on JS-heavy pages.
+                view.visibility = View.INVISIBLE
+                view.post {
+                    view.visibility = View.VISIBLE
                 }
             }
 
@@ -111,6 +122,20 @@ class MainActivity : AppCompatActivity() {
             override fun onProgressChanged(view: WebView, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 progressBar.progress = newProgress
+                if (!loadingDismissedEarly && !hasError && newProgress >= earlyDismissProgressThreshold) {
+                    loadingDismissedEarly = true
+                    loadingOverlay.visibility = View.GONE
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (::webView.isInitialized) {
+            webView.visibility = View.INVISIBLE
+            webView.post {
+                webView.visibility = View.VISIBLE
             }
         }
     }
