@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     private var hasError = false
     private var loadingDismissedEarly = false
 
-    private val earlyDismissProgressThreshold = 75
+    private val earlyDismissProgressThreshold = 95
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
