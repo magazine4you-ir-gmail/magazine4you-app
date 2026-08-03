@@ -15,14 +15,13 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <!-- Full-screen loading overlay: shown while a page is loading, hidden once it finishes -->
     <LinearLayout
         android:id="@+id/loadingOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
-        android:background="@color/background_light"
+        android:background="@color/loading_background"
         android:visibility="visible"
         android:clickable="true"
         android:focusable="true">
@@ -31,7 +30,7 @@
             android:id="@+id/loadingSpinner"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:indeterminateTint="@color/bitcoin_orange" />
+            android:indeterminateTint="@color/loading_yellow" />
 
     </LinearLayout>
 
@@ -43,7 +42,7 @@
         android:layout_gravity="top"
         android:indeterminate="false"
         android:max="100"
-        android:progressTint="@color/bitcoin_orange"
+        android:progressTint="@color/loading_yellow"
         android:visibility="gone" />
 
     <LinearLayout
