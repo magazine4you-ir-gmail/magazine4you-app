@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var errorLayout: LinearLayout
     private lateinit var retryButton: Button
+    private lateinit var loadingOverlay: LinearLayout
 
     private val siteUrl by lazy { getString(R.string.site_url) }
     private var hasError = false
@@ -38,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         errorLayout = findViewById(R.id.errorLayout)
         retryButton = findViewById(R.id.retryButton)
+        loadingOverlay = findViewById(R.id.loadingOverlay)
 
         setupWebView()
         setupSwipeRefresh()
@@ -62,11 +64,9 @@ class MainActivity : AppCompatActivity() {
         webView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
                 val url = request.url.toString()
-                // Keep navigation for the site's own domain inside the WebView.
                 return if (Uri.parse(url).host?.endsWith("magazine4you.ir") == true) {
                     false
                 } else {
-                    // External links open in the system browser.
                     startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, request.url))
                     true
                 }
@@ -76,12 +76,16 @@ class MainActivity : AppCompatActivity() {
                 super.onPageStarted(view, url, favicon)
                 hasError = false
                 progressBar.visibility = View.VISIBLE
+                if (!swipeRefresh.isRefreshing) {
+                    loadingOverlay.visibility = View.VISIBLE
+                }
             }
 
             override fun onPageFinished(view: WebView, url: String?) {
                 super.onPageFinished(view, url)
                 progressBar.visibility = View.GONE
                 swipeRefresh.isRefreshing = false
+                loadingOverlay.visibility = View.GONE
                 if (!hasError) {
                     showContent()
                 }
@@ -97,6 +101,7 @@ class MainActivity : AppCompatActivity() {
                     hasError = true
                     progressBar.visibility = View.GONE
                     swipeRefresh.isRefreshing = false
+                    loadingOverlay.visibility = View.GONE
                     showError()
                 }
             }
@@ -114,10 +119,8 @@ class MainActivity : AppCompatActivity() {
         swipeRefresh.setColorSchemeResources(R.color.bitcoin_orange)
         swipeRefresh.setOnRefreshListener {
             if (hasError) {
-                // No page is currently loaded (previous attempt failed), so start fresh from home.
                 loadSite()
             } else {
-                // Refresh the page the user is currently on, not the home page.
                 webView.reload()
             }
         }
