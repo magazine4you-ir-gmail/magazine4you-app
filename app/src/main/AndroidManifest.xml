@@ -25,7 +25,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="false"
-            android:hardwareAccelerated="false"
             android:configChanges="orientation|screenSize|keyboardHidden" />
 
     </application>
